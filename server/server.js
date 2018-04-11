@@ -16,6 +16,8 @@ const { auth } = require('./middleware/auth');
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.use(express.static('client/build'))
+
 // GET //
 app.get('/api/getBook',(req,res) => {
 	let id = req.query.id
@@ -152,9 +154,12 @@ app.delete('/api/delete_book', (req, res) => {
 	})
 })
 
-
-
-
+if (process.env.NODE_ENV === 'production') {
+	const path = require('path');
+	app.get('/*', (req, res) => {
+		res.sendfile(path.resolve(__dirname, '../client', 'build', 'index.html'))
+	})
+}
 
 
 
